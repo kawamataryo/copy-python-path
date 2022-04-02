@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "repository": "https://github.com/kawamataryo/copy-python-path",
   "publisher": "kawamataryo",
+  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.65.0"
   },
