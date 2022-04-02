@@ -1,9 +1,10 @@
 {
-  "name": "copy-python-path",
+  "name": "copy-python-dotted-path",
   "displayName": "Copy Python Path",
   "description": "Copy the python dotted path of the current file to clipboard",
   "version": "0.0.1",
   "repository": "https://github.com/kawamataryo/copy-python-path",
+  "publisher": "kawamataryo",
   "engines": {
     "vscode": "^1.65.0"
   },
