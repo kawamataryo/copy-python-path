@@ -2,7 +2,7 @@
   "name": "copy-python-dotted-path",
   "displayName": "Copy Python Path",
   "description": "Copy python dotted path to clipboard",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "repository": "https://github.com/kawamataryo/copy-python-path",
   "publisher": "kawamataryo",
   "icon": "images/icon.png",
