@@ -18,6 +18,12 @@ const getDefinedParentSymbols = (symbol: DefinedSymbol, symbols: DefinedSymbol[]
 	return getDefinedParentSymbols(parentSymbol, symbols, [parentSymbol, ...result]);
 };
 
+/**
+ * Get defined symbols related to the selected rows from a python file. e.g. Class name, function name
+ * @param  {string} text - python code
+ * @param  {number} lineNumber - current cursor line number
+ * @return {array} defined symbols
+ */
 export const getDefinedSymbols = (text: string, lineNumber: number): string[] => {
 	const parser = new Python3Parser();
 	const tree = parser.parse(text);
