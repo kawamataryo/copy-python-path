@@ -1,0 +1,40 @@
+on:
+  workflow_dispatch:
+    branches:
+      - main
+    inputs:
+      type:
+        description: 'select version type'
+        type: choice
+        options:
+         - major
+         - minor
+         - patch
+        required: true
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    - name: Install dependencies
+      run: yarn install
+    # xvfb is required to run vscode on linux
+    - name: Run test on linux
+      run: xvfb-run -a yarn test
+      if: runner.os == 'Linux'
+    - name: Run test on Mac and Windows
+      run: yarn test
+      if: runner.os != 'Linux'
+    - name: Publish
+      if: success() && matrix.os == 'ubuntu-latest'
+      run: yarn run deploy -- ${{ github.event.inputs.choice }}
+      env:
+        VSCE_PAT: ${{ secrets.VSCE_PAT }}
