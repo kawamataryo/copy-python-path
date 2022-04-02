@@ -2,11 +2,17 @@
   "name": "copy-python-dotted-path",
   "displayName": "Copy Python Path",
   "description": "Copy the python dotted path of the current file to clipboard",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": "https://github.com/kawamataryo/copy-python-path",
   "publisher": "kawamataryo",
   "icon": "images/icon.png",
-  "keywords": ["python", "path", "dotted", "copy", "clipboard"],
+  "keywords": [
+    "python",
+    "path",
+    "dotted",
+    "copy",
+    "clipboard"
+  ],
   "engines": {
     "vscode": "^1.65.0"
   },
@@ -14,8 +20,8 @@
     "Other"
   ],
   "galleryBanner": {
-      "color": "#1e415e",
-      "theme": "dark"
+    "color": "#1e415e",
+    "theme": "dark"
   },
   "activationEvents": [
     "onCommand:copy-python-path.copy-python-path"
