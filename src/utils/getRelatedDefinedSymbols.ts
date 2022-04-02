@@ -24,7 +24,7 @@ const getDefinedParentSymbols = (symbol: DefinedSymbol, symbols: DefinedSymbol[]
  * @param  {number} lineNumber - current cursor line number
  * @return {array} defined symbols
  */
-export const getDefinedSymbols = (text: string, lineNumber: number): string[] => {
+export const getRelatedDefinedSymbols = (text: string, lineNumber: number): string[] => {
 	const parser = new Python3Parser();
 	const tree = parser.parse(text);
 

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { getDefinedSymbols } from './utils/getDefinedSymbols';
+import { getRelatedDefinedSymbols } from './utils/getRelatedDefinedSymbols';
 
 
 export function activate(context: vscode.ExtensionContext) {
@@ -27,10 +27,10 @@ export function activate(context: vscode.ExtensionContext) {
 		const filePath = filename.replace(rootPath, '').replaceAll('/', '.').replace(/\.py$/, '').slice(1);
 
 		try {
-			// get current defined symbols dotted path
+			// get related defined symbols from current file and current cursor position
 			const text = vscode.window.activeTextEditor!.document.getText();
 			const currentLine = vscode.window.activeTextEditor!.selection.active.line;
-			const definedSymbols = getDefinedSymbols(text, currentLine + 1);
+			const definedSymbols = getRelatedDefinedSymbols(text, currentLine + 1);
 
 			// copy python dotted path to clipboard
 			await vscode.env.clipboard.writeText([filePath, ...definedSymbols].join('.'));
