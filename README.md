@@ -1,4 +1,4 @@
-<div><img src="https://github.com/kawamataryo/copy-python-path/blob/main/images/icon.png?raw=true" alt="" width="200"/></div>
+<img src="https://github.com/kawamataryo/copy-python-path/blob/main/images/icon.png?raw=true" alt="" width="200"/>
   
 # Copy Python Path
 <a href="https://marketplace.visualstudio.com/items?itemName=kawamataryo.copy-python-dotted-path"><img alt="marketplace version" src="https://vsmarketplacebadge.apphb.com/version-short/kawamataryo.copy-python-dotted-path.svg"></a>
