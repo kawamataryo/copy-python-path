@@ -81,7 +81,7 @@ suite('Extension Test Suite', () => {
 		await sleep(500);
 
 		assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example.ClassD');
-	}).timeout(10000);
+	});
 
 	test('selected lines other than symbol', async () => {
 		editor.selection = new vscode.Selection(new vscode.Position(12, 0), new vscode.Position(12, 0));
@@ -90,5 +90,5 @@ suite('Extension Test Suite', () => {
 		await sleep(500);
 
 		assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example');
-	}).timeout(10000);
+	});
 });
