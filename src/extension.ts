@@ -5,14 +5,14 @@ import { getCurrentFileDottedPath } from './utils/getCurrentFileDottedPath';
 
 export function activate(context: vscode.ExtensionContext) {
 	const disposable = vscode.commands.registerCommand('copy-python-path.copy-python-path', async () => {
-		const filename = vscode.window.activeTextEditor?.document.fileName;
+		const currentFilePath = vscode.window.activeTextEditor?.document.fileName;
 
-		if (!filename) {
+		if (!currentFilePath) {
 			vscode.window.showErrorMessage("Don't read file. only use this command when selected file.");
 			return;
 		}
 
-		if (!/.py$/.test(filename)) {
+		if (!/.py$/.test(currentFilePath)) {
 			vscode.window.showErrorMessage('Not a python file. only use this command when selected python file.');
 			return;
 		}
@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		// get current file dotted path
-    const currentFileDottedPath = getCurrentFileDottedPath(folders[0].uri.fsPath, filename);
+    const currentFileDottedPath = getCurrentFileDottedPath(folders[0].uri.fsPath, currentFilePath);
 
 		try {
 			// get related defined symbols from current file and current cursor position
