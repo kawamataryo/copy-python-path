@@ -39,3 +39,5 @@ jobs:
       run: yarn run deploy -- ${{ github.event.inputs.type }}
       env:
         VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        GIT_AUTHOR_NAME: kawamataryo
+        GIT_AUTHOR_EMAIL: ba068082@gmail.com
