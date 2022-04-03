@@ -2,7 +2,7 @@
 <a href="https://marketplace.visualstudio.com/items?itemName=kawamataryo.copy-python-dotted-path"><img alt="marketplace version" src="https://vsmarketplacebadge.apphb.com/version-short/kawamataryo.copy-python-dotted-path.svg"></a>
 <a href="https://marketplace.visualstudio.com/items?itemName=kawamataryo.copy-python-dotted-path"><img alt="marketplace install count" src="https://vsmarketplacebadge.apphb.com/installs/kawamataryo.copy-python-dotted-path.svg"></a>
 <a href="https://marketplace.visualstudio.com/items?itemName=kawamataryo.copy-python-dotted-path"><img alt="marketplace rating star" src="https://vsmarketplacebadge.apphb.com/rating-star/kawamataryo.copy-python-dotted-path.svg"></a>
-[![.github/workflows/e2e-test.yml](https://github.com/kawamataryo/copy-python-path/actions/workflows/e2e-test.yml/badge.svg)](https://github.com/kawamataryo/copy-python-path/actions/workflows/e2e-test.yml)
+[![E2E](https://github.com/kawamataryo/copy-python-path/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/kawamataryo/copy-python-path/actions/workflows/release.yml)
   
 An VSCode extension to copy python dotted paths to the clipboard.
   
