@@ -1,7 +1,7 @@
 # Copy Python Path
 
-<img src="https://github.com/kawamataryo/copy-python-path/blob/main/images/icon.png?raw=true" alt="" width="200"/>
-  
+![](https://i.gyazo.com/4b80a051f219aab1ec8874f5475277a4.png)
+
 <a href="https://marketplace.visualstudio.com/items?itemName=kawamataryo.copy-python-dotted-path"><img alt="marketplace version" src="https://vsmarketplacebadge.apphb.com/version-short/kawamataryo.copy-python-dotted-path.svg"></a>
 <a href="https://marketplace.visualstudio.com/items?itemName=kawamataryo.copy-python-dotted-path"><img alt="marketplace install count" src="https://vsmarketplacebadge.apphb.com/installs/kawamataryo.copy-python-dotted-path.svg"></a>
 <a href="https://marketplace.visualstudio.com/items?itemName=kawamataryo.copy-python-dotted-path"><img alt="marketplace rating star" src="https://vsmarketplacebadge.apphb.com/rating-star/kawamataryo.copy-python-dotted-path.svg"></a>
