@@ -41,12 +41,21 @@
           "command": "copy-python-path.copy-python-path",
           "group": "myGroup@1"
         }
+      ],
+      "explorer/context": [
+        {
+          "when": "resourceLangId == python",
+          "command": "copy-python-path.copy-python-path",
+          "group": "myGroup@1"
+        }
       ]
     },
     "keybindings": [
       {
         "command": "copy-python-path.copy-python-path",
-        "key": "option+cmd+c"
+        "key": "option+ctrl+c",
+        "mac": "option+cmd+c",
+        "when": "editorTextFocus && resourceLangId == python"
       }
     ]
   },
