@@ -5,9 +5,9 @@ on:
         description: 'select release type'
         type: choice
         options:
-         - major
-         - minor
          - patch
+         - minor
+         - major
         required: true
 
 jobs:
