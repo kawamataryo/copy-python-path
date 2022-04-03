@@ -34,8 +34,9 @@ jobs:
       if: runner.os != 'Linux'
     - name: Publish
       if: success() && matrix.os == 'ubuntu-latest'
-      run: yarn run deploy -- ${{ github.event.inputs.release_type }}
+      run: |
+        git config --global user.name "${GITHUB_ACTOR}"
+        git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+        yarn run deploy -- ${{ github.event.inputs.release_type }}
       env:
         VSCE_PAT: ${{ secrets.VSCE_PAT }}
-        GIT_AUTHOR_NAME: kawamataryo
-        GIT_AUTHOR_EMAIL: ba068082@gmail.com
