@@ -1,10 +1,8 @@
 on:
   workflow_dispatch:
-    branches:
-      - main
     inputs:
-      type:
-        description: 'select version type'
+      release_type:
+        description: 'select release type'
         type: choice
         options:
          - major
@@ -36,7 +34,7 @@ jobs:
       if: runner.os != 'Linux'
     - name: Publish
       if: success() && matrix.os == 'ubuntu-latest'
-      run: yarn run deploy -- ${{ github.event.inputs.type }}
+      run: yarn run deploy -- ${{ github.event.inputs.release_type }}
       env:
         VSCE_PAT: ${{ secrets.VSCE_PAT }}
         GIT_AUTHOR_NAME: kawamataryo
