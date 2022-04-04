@@ -5,15 +5,15 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 
 const sleep = (ms: number): Promise<void> => {
-	return new Promise((resolve) => {
-		setTimeout(resolve, ms);
-	});
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 };
 
 const executeCommandWithWait = async (command: string): Promise<any> => {
-	await sleep(500);
-	await vscode.commands.executeCommand(COMMAND_NAME);
-	await sleep(1000);
+  await sleep(500);
+  await vscode.commands.executeCommand(COMMAND_NAME);
+  await sleep(1000);
 };
 
 const COMMAND_NAME = 'copy-python-path.copy-python-path';
@@ -21,74 +21,74 @@ const COMMAND_NAME = 'copy-python-path.copy-python-path';
 const testFileLocation = '/pythonApp/example.py';
 /* test file is following code
 class ClassA:
-		def class_a_method_a():
-				pass
+    def class_a_method_a():
+        pass
 
-		class ClassB:
-			 def class_b_method_a():
-					 pass
+    class ClassB:
+       def class_b_method_a():
+           pass
 
 class ClassD:
-		def class_d_method_a():
-			 pass
+    def class_d_method_a():
+       pass
 */
 
 suite('Extension Test Suite', () => {
-	vscode.window.showInformationMessage('Start all tests.');
-	let editor: vscode.TextEditor;
+  vscode.window.showInformationMessage('Start all tests.');
+  let editor: vscode.TextEditor;
 
-	setup(async () => {
-		// open folder
-		const fileUri = vscode.Uri.file(vscode.workspace.workspaceFolders![0].uri.fsPath + testFileLocation);
-		const document = await vscode.workspace.openTextDocument(fileUri);
-		editor = await vscode.window.showTextDocument(document);
-	});
+  setup(async () => {
+    // open folder
+    const fileUri = vscode.Uri.file(vscode.workspace.workspaceFolders![0].uri.fsPath + testFileLocation);
+    const document = await vscode.workspace.openTextDocument(fileUri);
+    editor = await vscode.window.showTextDocument(document);
+  });
 
-	test('selected class lines', async () => {
-		editor.selection = new vscode.Selection(new vscode.Position(0, 0), new vscode.Position(0, 0));
+  test('selected class lines', async () => {
+    editor.selection = new vscode.Selection(new vscode.Position(0, 0), new vscode.Position(0, 0));
 
-		await executeCommandWithWait(COMMAND_NAME);
+    await executeCommandWithWait(COMMAND_NAME);
 
-		assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example.ClassA');
-	});
+    assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example.ClassA');
+  });
 
-	test('selected method lines', async () => {
-		editor.selection = new vscode.Selection(new vscode.Position(1, 0), new vscode.Position(1, 0));
+  test('selected method lines', async () => {
+    editor.selection = new vscode.Selection(new vscode.Position(1, 0), new vscode.Position(1, 0));
 
-		await executeCommandWithWait(COMMAND_NAME);
+    await executeCommandWithWait(COMMAND_NAME);
 
-		assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example.ClassA.class_a_method_a');
-	});
+    assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example.ClassA.class_a_method_a');
+  });
 
-	test('selected nested class lines', async () => {
-		editor.selection = new vscode.Selection(new vscode.Position(4, 0), new vscode.Position(4, 0));
+  test('selected nested class lines', async () => {
+    editor.selection = new vscode.Selection(new vscode.Position(4, 0), new vscode.Position(4, 0));
 
-		await executeCommandWithWait(COMMAND_NAME);
+    await executeCommandWithWait(COMMAND_NAME);
 
-		assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example.ClassA.ClassB');
-	});
+    assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example.ClassA.ClassB');
+  });
 
-	test('selected nested method lines', async () => {
-		editor.selection = new vscode.Selection(new vscode.Position(5, 0), new vscode.Position(5, 0));
+  test('selected nested method lines', async () => {
+    editor.selection = new vscode.Selection(new vscode.Position(5, 0), new vscode.Position(5, 0));
 
-		await executeCommandWithWait(COMMAND_NAME);
+    await executeCommandWithWait(COMMAND_NAME);
 
-		assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example.ClassA.ClassB.class_b_method_a');
-	});
+    assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example.ClassA.ClassB.class_b_method_a');
+  });
 
-	test('selected other class lines', async () => {
-		editor.selection = new vscode.Selection(new vscode.Position(9, 0), new vscode.Position(9, 0));
+  test('selected other class lines', async () => {
+    editor.selection = new vscode.Selection(new vscode.Position(9, 0), new vscode.Position(9, 0));
 
-		await executeCommandWithWait(COMMAND_NAME);
+    await executeCommandWithWait(COMMAND_NAME);
 
-		assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example.ClassD');
-	});
+    assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example.ClassD');
+  });
 
-	test('selected lines other than symbol', async () => {
-		editor.selection = new vscode.Selection(new vscode.Position(12, 0), new vscode.Position(12, 0));
+  test('selected lines other than symbol', async () => {
+    editor.selection = new vscode.Selection(new vscode.Position(12, 0), new vscode.Position(12, 0));
 
-		await executeCommandWithWait(COMMAND_NAME);
+    await executeCommandWithWait(COMMAND_NAME);
 
-		assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example');
-	});
+    assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example');
+  });
 });
