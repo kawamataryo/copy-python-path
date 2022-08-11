@@ -1,44 +1,71 @@
 import * as vscode from 'vscode';
+import { basename } from 'path';
 import { getRelatedDefinedSymbols } from './utils/getRelatedDefinedSymbols';
 import { getCurrentFileDottedPath } from './utils/getCurrentFileDottedPath';
 
 
 export function activate(context: vscode.ExtensionContext) {
   const disposable = vscode.commands.registerCommand('copy-python-path.copy-python-path', async () => {
-    const currentFilePath = vscode.window.activeTextEditor?.document.fileName;
 
-    if (!currentFilePath) {
-      vscode.window.showErrorMessage("Don't read file. only use this command when selected file.");
+    const editor = vscode.window.activeTextEditor;
+
+    if (!editor) {
+      vscode.window.showErrorMessage("No active editor! Only use this command when selected file in active editor.");
       return;
     }
 
-    if (!/.py$/.test(currentFilePath)) {
-      vscode.window.showErrorMessage('Not a python file. only use this command when selected python file.');
-      return;
+    
+
+    // New resource method
+    const resource = editor.document.uri;
+    if (resource.scheme === 'file') {
+        const currentFilePath = editor.document.fileName;
+        if (!currentFilePath) {
+          vscode.window.showErrorMessage("Don't read file. only use this command when selected file.");
+          return;
+        }
+        if (!/.py$/.test(currentFilePath)) {
+          vscode.window.showErrorMessage('Not a python file. only use this command when selected python file.');
+          return;
+        }
+        // Get workspace folder to determine relative path
+        const folder = vscode.workspace.getWorkspaceFolder(resource);
+        if (!folder) {
+            vscode.window.showErrorMessage('No workspace folder is opened. only use this command in a workspace.');
+            return;
+            // text = `$(alert) <outside workspace> → ${basename(resource.fsPath)}`;
+        } else {
+              const moduleRootName = basename(folder.uri.fsPath);
+               // get current file dotted path
+              const currentFileDottedPath = [moduleRootName, getCurrentFileDottedPath(folder.uri.fsPath, currentFilePath)].join('.'); // Add the moduleRootName (package name) to the start
+              try {
+                // get related defined symbols from current file and current cursor position
+                const text = vscode.window.activeTextEditor!.document.getText();
+                const currentLine = vscode.window.activeTextEditor!.selection.active.line;
+                const definedSymbols = getRelatedDefinedSymbols(text, currentLine + 1);
+                const finalOutPath = [currentFileDottedPath, ...definedSymbols].join('.');
+                // copy python dotted path to clipboard
+                await vscode.env.clipboard.writeText(finalOutPath);
+                // vscode.window.showInformationMessage('Copied to clipboard.');
+                vscode.window.showInformationMessage(['Copied to clipboard', finalOutPath].join(': '));
+              } catch (e) {
+                console.error(e);
+                vscode.window.showErrorMessage('Failed to parse file.');
+              }
+            // text = `$(file-submodule) ${basename(folder.uri.fsPath)} (${folder.index + 1} of ${vscode.workspace.workspaceFolders.length}) → $(file-code) ${basename(resource.fsPath)}`;
+            // tooltip = resource.fsPath;
+
+            // const multiRootConfigForResource = vscode.workspace.getConfiguration('multiRootSample', resource);
+            // color = multiRootConfigForResource.get('statusColor');
+        }
     }
 
-    const folders = vscode.workspace.workspaceFolders;
-    if(!folders) {
-      vscode.window.showErrorMessage('No workspace folder is opened. only use this command in a workspace.');
-      return;
-    }
-
-    // get current file dotted path
-    const currentFileDottedPath = getCurrentFileDottedPath(folders[0].uri.fsPath, currentFilePath);
-
-    try {
-      // get related defined symbols from current file and current cursor position
-      const text = vscode.window.activeTextEditor!.document.getText();
-      const currentLine = vscode.window.activeTextEditor!.selection.active.line;
-      const definedSymbols = getRelatedDefinedSymbols(text, currentLine + 1);
-
-      // copy python dotted path to clipboard
-      await vscode.env.clipboard.writeText([currentFileDottedPath, ...definedSymbols].join('.'));
-      vscode.window.showInformationMessage('Copied to clipboard.');
-    } catch (e) {
-      console.error(e);
-      vscode.window.showErrorMessage('Failed to parse file.');
-    }
+    // old method:
+    // const folders = vscode.workspace.workspaceFolders;
+    // if(!folders) {
+    //   vscode.window.showErrorMessage('No workspace folder is opened. only use this command in a workspace.');
+    //   return;
+    // }
   });
 
   context.subscriptions.push(disposable);
