@@ -25,7 +25,8 @@
     "theme": "dark"
   },
   "activationEvents": [
-    "onCommand:copy-python-path.copy-python-path"
+    "onCommand:copy-python-path.copy-python-path",
+    "onCommand:copy-python-import-statement"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -33,6 +34,10 @@
       {
         "command": "copy-python-path.copy-python-path",
         "title": "Copy python path"
+      },
+      {
+        "command": "copy-python-path.copy-python-import-statement",
+        "title": "Copy python import statement"
       }
     ],
     "menus": {
@@ -41,12 +46,22 @@
           "when": "resourceLangId == python",
           "command": "copy-python-path.copy-python-path",
           "group": "myGroup@1"
+        },
+        {
+          "when": "resourceLangId == python",
+          "command": "copy-python-path.copy-python-import-statement",
+          "group": "myGroup@1"
         }
       ],
       "explorer/context": [
         {
           "when": "resourceLangId == python",
           "command": "copy-python-path.copy-python-path",
+          "group": "myGroup@1"
+        },
+        {
+          "when": "resourceLangId == python",
+          "command": "copy-python-path.copy-python-import-statement",
           "group": "myGroup@1"
         }
       ]
@@ -56,6 +71,12 @@
         "command": "copy-python-path.copy-python-path",
         "key": "option+ctrl+c",
         "mac": "option+cmd+c",
+        "when": "editorTextFocus && resourceLangId == python"
+      },
+      {
+        "command": "copy-python-path.copy-python-import-statement",
+        "key": "option+ctrl+shift+c",
+        "mac": "option+cmd+shift+c",
         "when": "editorTextFocus && resourceLangId == python"
       }
     ]
