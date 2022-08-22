@@ -2,7 +2,7 @@
   "name": "copy-python-dotted-path",
   "displayName": "Copy Python Path",
   "description": "Copy python dotted path to clipboard",
-  "version": "0.4.9",
+  "version": "0.5.0",
   "repository": "https://github.com/kawamataryo/copy-python-path",
   "publisher": "kawamataryo",
   "icon": "images/icon.png",
@@ -11,7 +11,8 @@
     "path",
     "unittest",
     "copy",
-    "clipboard"
+    "clipboard",
+    "multi-root ready"
   ],
   "engines": {
     "vscode": "^1.65.0"
@@ -24,7 +25,8 @@
     "theme": "dark"
   },
   "activationEvents": [
-    "onCommand:copy-python-path.copy-python-path"
+    "onCommand:copy-python-path.copy-python-path",
+    "onCommand:copy-python-import-statement"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -32,6 +34,10 @@
       {
         "command": "copy-python-path.copy-python-path",
         "title": "Copy python path"
+      },
+      {
+        "command": "copy-python-path.copy-python-import-statement",
+        "title": "Copy python import statement"
       }
     ],
     "menus": {
@@ -40,12 +46,22 @@
           "when": "resourceLangId == python",
           "command": "copy-python-path.copy-python-path",
           "group": "myGroup@1"
+        },
+        {
+          "when": "resourceLangId == python",
+          "command": "copy-python-path.copy-python-import-statement",
+          "group": "myGroup@1"
         }
       ],
       "explorer/context": [
         {
           "when": "resourceLangId == python",
           "command": "copy-python-path.copy-python-path",
+          "group": "myGroup@1"
+        },
+        {
+          "when": "resourceLangId == python",
+          "command": "copy-python-path.copy-python-import-statement",
           "group": "myGroup@1"
         }
       ]
@@ -55,6 +71,12 @@
         "command": "copy-python-path.copy-python-path",
         "key": "option+ctrl+c",
         "mac": "option+cmd+c",
+        "when": "editorTextFocus && resourceLangId == python"
+      },
+      {
+        "command": "copy-python-path.copy-python-import-statement",
+        "key": "option+ctrl+shift+c",
+        "mac": "option+cmd+shift+c",
         "when": "editorTextFocus && resourceLangId == python"
       }
     ]
@@ -86,7 +108,7 @@
     "typescript": "^4.5.5",
     "vsce": "^2.7.0",
     "webpack": "^5.70.0",
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.10.0"
   },
   "dependencies": {
     "dt-python-parser": "^0.9.2-beta"
