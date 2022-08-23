@@ -19,6 +19,15 @@ When the `copy python path` command is executed, it copies the python dotted pat
   
 ![feature](https://i.gyazo.com/fe88befdaea034eff0adfd4caacd028f.gif)
 
+## Configuration
+
+If you want to add the workspace folder name to the beginning of the dotted path, add the following setting to setting.json.
+
+```
+{
+  "copyPythonPath.addModuleRootName": true // default false
+}
+```
 ## Notice
 - This extension works only with python3 files.
 
