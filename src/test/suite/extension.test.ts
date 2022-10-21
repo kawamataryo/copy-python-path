@@ -12,11 +12,12 @@ const sleep = (ms: number): Promise<void> => {
 
 const executeCommandWithWait = async (command: string): Promise<any> => {
   await sleep(500);
-  await vscode.commands.executeCommand(COMMAND_NAME);
+  await vscode.commands.executeCommand(command);
   await sleep(1000);
 };
 
 const COMMAND_NAME = 'copy-python-path.copy-python-path';
+const COMMAND_IMPORT_NAME = "copy-python-path.copy-python-import-statement";
 
 const testFileLocation = '/pythonApp/example.py';
 /* test file is following code
@@ -90,5 +91,12 @@ suite('Extension Test Suite', () => {
     await executeCommandWithWait(COMMAND_NAME);
 
     assert.strictEqual(await vscode.env.clipboard.readText(), 'pythonApp.example');
+  });
+  test('from import stmt is correctly generated for classA', async () => {
+    editor.selection = new vscode.Selection(new vscode.Position(0, 0), new vscode.Position(0, 0));
+
+    await executeCommandWithWait(COMMAND_IMPORT_NAME);
+
+    assert.strictEqual(await vscode.env.clipboard.readText(), 'from pythonApp.example import ClassA');
   });
 });
