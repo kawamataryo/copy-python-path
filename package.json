@@ -26,7 +26,7 @@
 	},
 	"activationEvents": [
 		"onCommand:copy-python-path.copy-python-path",
-		"onCommand:copy-python-import-statement"
+		"onCommand:copy-python-path.copy-python-import-statement"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
