@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { basename } from 'path';
 import { getRelatedDefinedSymbols } from './utils/getRelatedDefinedSymbols';
 import { getCurrentFileDottedPath } from './utils/getCurrentFileDottedPath';
 

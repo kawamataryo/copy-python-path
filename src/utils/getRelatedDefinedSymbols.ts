@@ -41,7 +41,6 @@ export const getRelatedDefinedSymbols = (
 
 	const symbols: DefinedSymbol[] = [];
 	class MyListener extends Python3Listener {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		enterClassdef(ctx: any): void {
 			symbols.push({
 				name: ctx.children[1].getText(),
@@ -49,7 +48,6 @@ export const getRelatedDefinedSymbols = (
 				column: ctx.children[0].getSymbol().column,
 			});
 		}
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		enterFuncdef(ctx: any): void {
 			symbols.push({
 				name: ctx.children[1].getText(),
