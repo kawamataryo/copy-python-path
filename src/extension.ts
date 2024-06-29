@@ -40,12 +40,14 @@ export function activate(context: vscode.ExtensionContext) {
         // get related defined symbols from current file and current cursor position
         const text = vscode.window.activeTextEditor!.document.getText();
         const currentLine = vscode.window.activeTextEditor!.selection.active.line;
+        console.log("🚀 ~ disposable ~ currentLine:", currentLine)
         const definedSymbols = getRelatedDefinedSymbols(text, currentLine);
+        console.log("🚀 ~ disposable ~ definedSymbols:", definedSymbols)
         const finalOutPath = [currentFileDottedPath, ...definedSymbols].join('.');
         // copy python dotted path to clipboard
         await vscode.env.clipboard.writeText(finalOutPath);
         // vscode.window.showInformationMessage('Copied to clipboard.');
-        vscode.window.showInformationMessage(['Copied to clipboard', finalOutPath].join(': '));
+        vscode.window.showInformationMessage(['📋 Copied to clipboard', finalOutPath].join(': '));
       } catch (e) {
         console.error(e);
         vscode.window.showErrorMessage('Failed to parse file.');
