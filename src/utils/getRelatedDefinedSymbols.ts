@@ -1,3 +1,6 @@
+
+const symbolRegex = /(?:class|def)\s+([a-zA-Z_][a-zA-Z0-9_]*)/;
+
 /**
  * Extracts the symbol (class or function name) and its indentation level from a given line of code.
  * @param text - The given line of code to search for class or function keyword with its name.
@@ -6,8 +9,7 @@
 const extractSymbolAndIndent = (
 	text: string,
 ): { symbol: string; indentLevel: number } | null => {
-	const regex = /(?:class|def)\s+([a-zA-Z_][a-zA-Z0-9_]*)/;
-	const match = text.match(regex);
+	const match = text.match(symbolRegex);
 	if (!match) {
 		return null;
 	}
