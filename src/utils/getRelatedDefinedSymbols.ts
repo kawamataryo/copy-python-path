@@ -1,23 +1,5 @@
 
-const symbolRegex = /(?:class|def)\s+([a-zA-Z_][a-zA-Z0-9_]*)/;
-
-/**
- * Extracts the symbol (class or function name) and its indentation level from a given line of code.
- * @param text - The given line of code to search for class or function keyword with its name.
- * @returns An object containing the symbol and its indentation level or null if not found.
- */
-const extractSymbolAndIndent = (
-	text: string,
-): { symbol: string; indentLevel: number } | null => {
-	const match = text.match(symbolRegex);
-	if (!match) {
-		return null;
-	}
-	return {
-		symbol: match[1],
-		indentLevel: text.search(/\S|$/), // Search for the first non-whitespace character
-	};
-};
+const symbolRegex = /^(\s*)(?:class|def)\s+([a-zA-Z_][a-zA-Z0-9_]*)/;
 
 /**
  * Retrieves symbols that are defined before the current line in the source code and have lower indentation level.
@@ -26,32 +8,28 @@ const extractSymbolAndIndent = (
  * @returns An array of symbols defined before the current line in hierarchical order.
  */
 export const getRelatedDefinedSymbols = (
-	sourceCode: string,
-	currentLine: number,
+    sourceCode: string,
+    currentLine: number,
 ): string[] => {
-	const lines = sourceCode.split("\n");
-	const currentLineText = lines[currentLine];
+    const lines = sourceCode.split('\n');
+    const definedSymbols: string[] = [];
+    let currentIndentLevel = -1;
 
-	// Extract the current symbol and its indent level
-	const currentSymbolInfo = extractSymbolAndIndent(currentLineText);
-	if (!currentSymbolInfo) {
-		return [];
-	}
+    for (let i = currentLine; i >= 0; i--) {
+        const match = lines[i].match(symbolRegex);
+        if (match) {
+            const [, indent, symbol] = match;
+            const indentLevel = indent.length;
 
-	let currentIndentLevel = currentSymbolInfo.indentLevel;
-	const definedSymbols: string[] = [];
+            if (i === currentLine) {
+                definedSymbols.push(symbol);
+                currentIndentLevel = indentLevel;
+            } else if (indentLevel < currentIndentLevel) {
+                definedSymbols.unshift(symbol);
+                currentIndentLevel = indentLevel;
+            }
+        }
+    }
 
-	// Analyze lines before the current line to gather symbols with lower indentation
-	for (let i = currentLine - 1; i >= 0; i--) {
-		const symbolInfo = extractSymbolAndIndent(lines[i]);
-		if (symbolInfo && symbolInfo.indentLevel < currentIndentLevel) {
-			definedSymbols.unshift(symbolInfo.symbol); // Prepend to maintain correct order
-			currentIndentLevel = symbolInfo.indentLevel;
-		}
-	}
-
-	// Include the current symbol at the end of the list
-	definedSymbols.push(currentSymbolInfo.symbol);
-
-	return definedSymbols;
+    return definedSymbols;
 };
