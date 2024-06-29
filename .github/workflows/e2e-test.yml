@@ -21,6 +21,13 @@ jobs:
     - name: Install dependencies
       run: yarn install
     # xvfb is required to run vscode on linux
+    - name: Run lint
+      run: |
+        if [ $RUNNER_OS == 'Windows' ]; then
+          yarn biome check --write "src/**/*.ts"
+        else
+          yarn biome check --write src/**/*.ts
+        fi
     - name: Run test on linux
       run: xvfb-run -a yarn test
       if: runner.os == 'Linux'
