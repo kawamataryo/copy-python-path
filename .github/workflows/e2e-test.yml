@@ -27,7 +27,7 @@ jobs:
     - name: Run Biome on Windows
       if: runner.os == 'Windows'
       run: |
-        yarn biome check --write "src/**/*.ts"
+        yarn biome check --write "src\**\*.ts"
     # xvfb is required to run vscode on linux
     - name: Run test on linux
       run: xvfb-run -a yarn test
