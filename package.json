@@ -15,7 +15,7 @@
 		"multi-root ready"
 	],
 	"engines": {
-		"vscode": "^1.65.0"
+		"vscode": "^1.90.0"
 	},
 	"categories": [
 		"Other"
