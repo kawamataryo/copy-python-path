@@ -40,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
         // get related defined symbols from current file and current cursor position
         const text = vscode.window.activeTextEditor!.document.getText();
         const currentLine = vscode.window.activeTextEditor!.selection.active.line;
-        const definedSymbols = getRelatedDefinedSymbols(text, currentLine + 1);
+        const definedSymbols = getRelatedDefinedSymbols(text, currentLine);
         const finalOutPath = [currentFileDottedPath, ...definedSymbols].join('.');
         // copy python dotted path to clipboard
         await vscode.env.clipboard.writeText(finalOutPath);
@@ -92,7 +92,7 @@ export function activate(context: vscode.ExtensionContext) {
         // get related defined symbols from current file and current cursor position
         const text = vscode.window.activeTextEditor!.document.getText();
         const currentLine = vscode.window.activeTextEditor!.selection.active.line;
-        const definedSymbols = getRelatedDefinedSymbols(text, currentLine + 1);
+        const definedSymbols = getRelatedDefinedSymbols(text, currentLine);
         const finalOutPath = currentFileDottedPath;
         const finalImportStatement = `from ${finalOutPath} import ${definedSymbols.join(', ')}`;
 

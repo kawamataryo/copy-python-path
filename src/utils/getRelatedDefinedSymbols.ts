@@ -1,74 +1,55 @@
-import { Python3Listener, Python3Parser } from "dt-python-parser";
-
-const getDefinedParentSymbols = (
-	symbol: DefinedSymbol,
-	symbols: DefinedSymbol[],
-	result: DefinedSymbol[] = [],
-): DefinedSymbol[] => {
-	const parentSymbol = symbols
-		.filter((s) => s.column < symbol.column)
-		.sort((l, r) => {
-			const lDistance = symbol.line - l.line;
-			const rDistance = symbol.line - r.line;
-			if (lDistance > 0 && lDistance < rDistance) {
-				return -1;
-			}
-			return 1;
-		})[0];
-
-	if (parentSymbol.column === 0) {
-		return [parentSymbol, ...result];
+/**
+ * Extracts the symbol (class or function name) and its indentation level from a given line of code.
+ * @param text - The given line of code to search for class or function keyword with its name.
+ * @returns An object containing the symbol and its indentation level or null if not found.
+ */
+const extractSymbolAndIndent = (
+	text: string,
+): { symbol: string; indentLevel: number } | null => {
+	const regex = /(?:class|def)\s+([a-zA-Z_][a-zA-Z0-9_]*)/;
+	const match = text.match(regex);
+	if (!match) {
+		return null;
 	}
-
-	return getDefinedParentSymbols(parentSymbol, symbols, [
-		parentSymbol,
-		...result,
-	]);
+	return {
+		symbol: match[1],
+		indentLevel: text.search(/\S|$/), // Search for the first non-whitespace character
+	};
 };
 
 /**
- * Get defined symbols related to the selected rows from a python file. e.g. Class name, function name
- * @param  {string} text - python code
- * @param  {number} lineNumber - current cursor line number
- * @return {array} defined symbols
+ * Retrieves symbols that are defined before the current line in the source code and have lower indentation level.
+ * @param sourceCode - The entire source code as a string.
+ * @param currentLine - The line index (0-based) currently being analyzed.
+ * @returns An array of symbols defined before the current line in hierarchical order.
  */
 export const getRelatedDefinedSymbols = (
-	text: string,
-	lineNumber: number,
+	sourceCode: string,
+	currentLine: number,
 ): string[] => {
-	const parser = new Python3Parser();
-	const tree = parser.parse(text);
+	const lines = sourceCode.split("\n");
+	const currentLineText = lines[currentLine];
 
-	const symbols: DefinedSymbol[] = [];
-	class MyListener extends Python3Listener {
-		enterClassdef(ctx: any): void {
-			symbols.push({
-				name: ctx.children[1].getText(),
-				line: ctx.children[0].getSymbol().line,
-				column: ctx.children[0].getSymbol().column,
-			});
-		}
-		enterFuncdef(ctx: any): void {
-			symbols.push({
-				name: ctx.children[1].getText(),
-				line: ctx.children[0].getSymbol().line,
-				column: ctx.children[0].getSymbol().column,
-			});
-		}
-	}
-	const listenTableName = new MyListener();
-	parser.listen(listenTableName, tree);
-
-	const symbol = symbols.filter((s) => s.line === lineNumber)[0];
-	if (!symbol) {
+	// Extract the current symbol and its indent level
+	const currentSymbolInfo = extractSymbolAndIndent(currentLineText);
+	if (!currentSymbolInfo) {
 		return [];
 	}
-	if (symbol.column === 0) {
-		return [symbol.name];
+
+	let currentIndentLevel = currentSymbolInfo.indentLevel;
+	const definedSymbols: string[] = [];
+
+	// Analyze lines before the current line to gather symbols with lower indentation
+	for (let i = currentLine - 1; i >= 0; i--) {
+		const symbolInfo = extractSymbolAndIndent(lines[i]);
+		if (symbolInfo && symbolInfo.indentLevel < currentIndentLevel) {
+			definedSymbols.unshift(symbolInfo.symbol); // Prepend to maintain correct order
+			currentIndentLevel = symbolInfo.indentLevel;
+		}
 	}
 
-	const parentSymbolNames = getDefinedParentSymbols(symbol, symbols).map(
-		(s) => s.name,
-	);
-	return [...parentSymbolNames, symbol.name];
+	// Include the current symbol at the end of the list
+	definedSymbols.push(currentSymbolInfo.symbol);
+
+	return definedSymbols;
 };
