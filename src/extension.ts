@@ -44,8 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
         const finalOutPath = [currentFileDottedPath, ...definedSymbols].join('.');
         // copy python dotted path to clipboard
         await vscode.env.clipboard.writeText(finalOutPath);
-        // vscode.window.showInformationMessage('Copied to clipboard.');
-        vscode.window.showInformationMessage(['📋 Copied to clipboard', finalOutPath].join(': '));
+        vscode.window.showInformationMessage(['Copied to clipboard', finalOutPath].join(': '));
       } catch (e) {
         console.error(e);
         vscode.window.showErrorMessage('Failed to parse file.');
@@ -98,8 +97,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         // copy python dotted path to clipboard
         await vscode.env.clipboard.writeText(finalImportStatement);
-        // vscode.window.showInformationMessage('Copied to clipboard.');
-        vscode.window.showInformationMessage(['📋 Copied to clipboard', finalImportStatement].join(': '));
+        vscode.window.showInformationMessage(['Copied to clipboard', finalImportStatement].join(': '));
       } catch (e) {
         console.error(e);
         vscode.window.showErrorMessage('Failed to parse file.');
