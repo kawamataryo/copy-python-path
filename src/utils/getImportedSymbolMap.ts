@@ -1,4 +1,26 @@
 /**
+ * Parses a list of symbol parts and adds them to the symbol map.
+ * Handles "Symbol" and "Symbol as Alias" formats.
+ */
+const parseSymbolsIntoMap = (symbolsPart: string, modulePath: string, symbolMap: Map<string, string>): void => {
+  // Remove parentheses and split by comma
+  const cleanedPart = symbolsPart.replace(/[()]/g, "");
+  const importedSymbols = cleanedPart.split(",").map((s) => s.trim());
+
+  for (const symbolPart of importedSymbols) {
+    if (!symbolPart) continue;
+
+    // Handle potential "as" alias
+    const asMatch = symbolPart.match(/^([\w]+)(?:\s+as\s+([\w]+))?$/);
+    if (asMatch) {
+      const originalSymbol = asMatch[1];
+      const aliasSymbol = asMatch[2] || originalSymbol; // Use the original name if no alias
+      symbolMap.set(aliasSymbol, `${modulePath}.${originalSymbol}`);
+    }
+  }
+};
+
+/**
  * Creates a map of imported symbols to their full dotted paths.
  * @param sourceCode - The entire source code as a string.
  * @returns A map of local symbols to their fully qualified dotted paths.
@@ -11,32 +33,38 @@ export const getImportedSymbolMap = (sourceCode: string): Map<string, string> =>
   // 1. from module.path import Symbol, AnotherSymbol
   // 2. import module.path.Symbol as alias
 
-  // Regex for "from X import Y" pattern
-  const fromImportRegex = /^\s*from\s+([\w.]+)\s+import\s+(.+)$/;
+  // Regex for "from X import Y" pattern (captures the start of import, Y may be partial for multi-line)
+  const fromImportRegex = /^\s*from\s+([\w.]+)\s+import\s+(.*)$/;
 
   // Regex for "import X" pattern
   const importRegex = /^\s*import\s+(.+)$/;
 
-  for (const line of lines) {
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+
     // Handle "from X import Y" pattern
     const fromMatch = line.match(fromImportRegex);
     if (fromMatch) {
       const modulePath = fromMatch[1];
-      // Parse imported symbols (handling potential commas and 'as' aliases)
-      const importedSymbolsPart = fromMatch[2];
-      const importedSymbols = importedSymbolsPart.split(",").map((s) => s.trim());
+      let importedSymbolsPart = fromMatch[2];
 
-      for (const symbolPart of importedSymbols) {
-        if (!symbolPart) continue;
-
-        // Handle potential "as" alias
-        const asMatch = symbolPart.match(/^([\w]+)(?:\s+as\s+([\w]+))?$/);
-        if (asMatch) {
-          const originalSymbol = asMatch[1];
-          const aliasSymbol = asMatch[2] || originalSymbol; // Use the original name if no alias
-          symbolMap.set(aliasSymbol, `${modulePath}.${originalSymbol}`);
+      // Check if this is a multi-line import (starts with parenthesis but doesn't close)
+      if (importedSymbolsPart.includes("(") && !importedSymbolsPart.includes(")")) {
+        // Accumulate lines until we find the closing parenthesis
+        i++;
+        while (i < lines.length && !lines[i].includes(")")) {
+          importedSymbolsPart += " " + lines[i].trim();
+          i++;
+        }
+        // Add the final line with the closing parenthesis
+        if (i < lines.length) {
+          importedSymbolsPart += " " + lines[i].trim();
         }
       }
+
+      parseSymbolsIntoMap(importedSymbolsPart, modulePath, symbolMap);
+      i++;
       continue;
     }
 
@@ -67,6 +95,8 @@ export const getImportedSymbolMap = (sourceCode: string): Map<string, string> =>
         }
       }
     }
+
+    i++;
   }
 
   return symbolMap;

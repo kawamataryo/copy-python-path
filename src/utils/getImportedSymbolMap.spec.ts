@@ -58,4 +58,53 @@ import pandas as pd, numpy as np
     expect(symbolMap.get("pd")).toBe("pandas");
     expect(symbolMap.get("np")).toBe("numpy");
   });
+
+  it("should handle single-line parenthesized imports", () => {
+    const sourceCode = `
+from file.path import (MyClass, OtherClass)
+from another.module import (SingleSymbol)
+    `.trim();
+
+    const symbolMap = getImportedSymbolMap(sourceCode);
+
+    expect(symbolMap.get("MyClass")).toBe("file.path.MyClass");
+    expect(symbolMap.get("OtherClass")).toBe("file.path.OtherClass");
+    expect(symbolMap.get("SingleSymbol")).toBe("another.module.SingleSymbol");
+  });
+
+  it("should handle multi-line parenthesized imports", () => {
+    const sourceCode = `
+from file.path import (
+    MyClass,
+    OtherClass,
+)
+from another.module import (
+    FirstSymbol as First,
+    SecondSymbol,
+)
+    `.trim();
+
+    const symbolMap = getImportedSymbolMap(sourceCode);
+
+    expect(symbolMap.get("MyClass")).toBe("file.path.MyClass");
+    expect(symbolMap.get("OtherClass")).toBe("file.path.OtherClass");
+    expect(symbolMap.get("First")).toBe("another.module.FirstSymbol");
+    expect(symbolMap.get("SecondSymbol")).toBe("another.module.SecondSymbol");
+  });
+
+  it("should handle multi-line imports without trailing commas", () => {
+    const sourceCode = `
+from typing import (
+    List,
+    Optional,
+    Dict
+)
+    `.trim();
+
+    const symbolMap = getImportedSymbolMap(sourceCode);
+
+    expect(symbolMap.get("List")).toBe("typing.List");
+    expect(symbolMap.get("Optional")).toBe("typing.Optional");
+    expect(symbolMap.get("Dict")).toBe("typing.Dict");
+  });
 });
